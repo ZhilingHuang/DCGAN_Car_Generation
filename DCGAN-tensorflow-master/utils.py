@@ -83,6 +83,8 @@ def transform(image, input_height, input_width,
       image, input_height, input_width, 
       resize_height, resize_width)
   else:
+    if len(image.shape) == 2:
+      image = np.tile(np.expand_dims(image, axis=2), [1, 1, 3])
     cropped_image = scipy.misc.imresize(image, [resize_height, resize_width])
   return np.array(cropped_image)/127.5 - 1.
 
