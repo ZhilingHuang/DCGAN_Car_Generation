@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 from tensorflow.python.framework import ops
+from tensorflow.contrib.gan.python.features.python import virtual_batchnorm
 
 from utils import *
 
@@ -35,12 +36,23 @@ class batch_norm(object):
 
   def __call__(self, x, train=True):
     return tf.contrib.layers.batch_norm(x,
-                      decay=self.momentum, 
+                      decay=self.momentum,
                       updates_collections=None,
                       epsilon=self.epsilon,
                       scale=True,
                       is_training=train,
                       scope=self.name)
+
+class virtual_batch(object):
+  def __init__(self, name="virtual_batch"):
+    with tf.variable_scope(name):
+      self.vb = None
+  def __call__(self, x, train=True):
+    if self.vb is None:
+      self.vb = virtual_batchnorm.VBN(x)
+    return self.vb(x)
+
+
 
 def conv_cond_concat(x, y):
   """Concatenate conditioning vector on feature map axis."""
