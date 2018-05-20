@@ -266,7 +266,7 @@ class DCGAN(object):
           self.writer.add_summary(summary_str, counter)
           errG = self.g_loss.eval({self.z: batch_z})
 
-          for _ in range(10):
+          for _ in range(3):
             _, summary_str = self.sess.run([d_optim, self.d_sum],
                                            feed_dict={ self.inputs: batch_images, self.z: batch_z })
             self.writer.add_summary(summary_str, counter)
